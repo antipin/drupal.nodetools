@@ -1,0 +1,3 @@
+name = "Node tools"
+description = "Extends hook_node_info with extra properties, such as submit, display, publishing, comment settings etc."
+core = "7.x"

@@ -1,0 +1,231 @@
+<?php
+
+function nodetools_modules_enabled($modules) {
+
+  foreach($modules as $module) {
+    $node_info_array = module_invoke($module, 'node_info');
+    // If module implements hoon_node_info
+    if (!empty($node_info_array)) {
+      foreach($node_info_array as $type => $node_info) {
+
+        $node_info['type'] = $type;
+
+        nodetools_set_node_submission_form_settings($node_info);
+        nodetools_set_node_publishing_settings($node_info);
+        nodetools_set_node_display_settings($node_info);
+        nodetools_set_node_comment_settings($node_info);
+        nodetools_set_node_menu_settings($node_info);
+
+        /**
+         *  TODO: Add multilingual support
+         *  language_content_type_{$type}
+         *    value <string>:
+         *      0 => Disabled
+         *      1 => Enabled
+         *      2 => Enabled, with entity translation
+         */
+      }
+    }
+  }
+}
+
+
+
+function nodetools_modules_disabled($modules) {
+  $variables = array(
+    'comment_default_mode_',
+    'comment_default_per_page_',
+    'comment_form_location_',
+    'comment_',
+    'comment_preview_',
+    'comment_subject_field_',
+    'entity_translation_comment_filter_',
+    'entity_translation_node_metadata_',
+    'language_content_type_',
+    'menu_options_',
+    'menu_parent_',
+    'node_options_',
+    'node_preview_',
+    'node_submitted_',
+    'additional_settings__active_tab_',
+    'comment_anonymous_',
+  );
+
+  foreach ($modules as $module) {
+    $node_info_array = module_invoke($module, 'node_info');
+    if (!empty($node_info_array)) {
+
+      foreach($node_info_array as $type => $node_info) {
+
+        foreach ($variables as $variable) {
+          $variable_name = $variable . $type;
+          variable_del($variable_name);
+        }
+
+      }
+
+    }
+  }
+
+}
+
+
+function nodetools_set_node_submission_form_settings($node_info) {
+  /**
+   *  Submission form settings (core functional)
+   *  ------------------------------------------
+   *
+   *  Preview before submitting
+   *    node_preview_{$type}
+   *    value <string>:
+   *      0 => Disabled
+   *      1 => Optional
+   *      2 => Required
+   */
+  if (isset($node_info['node-preview'])) {
+    variable_set("node_preview_{$node_info['type']}", $node_info['node-preview']);
+  }
+}
+
+
+
+function nodetools_set_node_publishing_settings($node_info) {
+  /**
+   *  Publishing options (core functional)
+   *  ------------------------------------
+   *
+   *  Default options
+   *    node_options_{$type}
+   *    value <array>:
+   *      array('status', 'promote', 'sticky', 'revision')
+   */
+  if (isset($node_info['node-options'])) {
+    variable_set("node_options_{$node_info['type']}", $node_info['node-options']);
+  }
+}
+
+
+
+function nodetools_set_node_display_settings($node_info) {
+  /**
+   *  Display settings
+   *  ----------------
+   *
+   *  Display author and date information
+   *    node_submitted_{$type}
+   *    value <string>:
+   *      0 => Hide author and date information
+   *      1 => Display author and date information
+   */
+  if (isset($node_info['node-submitted'])) {
+    variable_set("node_submitted_{$node_info['type']}", $node_info['node-submitted']);
+  }
+}
+
+
+function nodetools_set_node_comment_settings($node_info) {
+  /**
+   *  Comment settings
+   *  ----------------
+   *
+   *  Default comment setting for new content
+   *    comment_{$type}
+   *    values:
+   *      0 => hidden
+   *      1 => closed
+   *      2 => open
+   *
+   *  Threading
+   *    comment_default_mode_{$type}
+   *    values:
+   *      0 => don't show
+   *      1 => show
+   *
+   *  Allow anonimous to leave commentns
+   * 	  comment_anonymous_{$type}
+   *    values:
+   *      0 => forbid
+   *      1 => allow
+   *
+   *  Comments per page
+   *    comment_default_per_page_{$type}
+   *    values:
+   *      10, 30, 50, 70, 90, 150, 200, 250, 300
+   *
+   *  Show reply form on the same page as comments
+   *    comment_form_location_{$type}
+   *    values:
+   *      0 => hide
+   *      1 => show
+   *
+   *  Preview comment
+   *    comment_preview_{$type}
+   *    values:
+   *      0 => disabled
+   *      1 => optional
+   *      2 => required
+   *
+   *  Allow comment title
+   *    comment_subject_field_{$type}
+   *    values:
+   *      0 => disallow
+   *      1 => allow
+   */
+  if (module_exists('comment')) {
+    if (isset($node_info['comment'])) {
+      // set data
+      if (isset($node_info['comment']['status'])) {
+        variable_set("comment_{$node_info['type']}", $node_info['comment']['status']);
+      }
+      if (isset($node_info['comment']['default-mode'])) {
+        variable_set("comment_default_mode_{$node_info['type']}", $node_info['comment']['default-mode']);
+      }
+      if (isset($node_info['comment']['anonymous'])) {
+        variable_set("comment_anonymous_{$node_info['type']}", $node_info['comment']['anonymous']);
+      }
+      if (isset($node_info['comment']['default-per-page'])) {
+        variable_set("comment_default_per_page_{$node_info['type']}", $node_info['comment']['default-per-page']);
+      }
+      if (isset($node_info['comment']['form-location'])) {
+        variable_set("comment_form_location_{$node_info['type']}", $node_info['comment']['form-location']);
+      }
+      if (isset($node_info['comment']['preview'])) {
+        variable_set("comment_preview_{$node_info['type']}", $node_info['comment']['preview']);
+      }
+      if (isset($node_info['comment']['subject-field'])) {
+        variable_set("comment_subject_field_{$node_info['type']}", $node_info['comment']['subject-field']);
+      }
+    }
+  }
+}
+
+
+function nodetools_set_node_menu_settings($node_info) {
+  /**
+   *  Menu settings
+   *  -------------
+   *
+   *  Available menus
+   *    menu_options_{$type}
+   *    value <array>:
+   *      Array of menu ids.
+   *      Example array('main-menu', 'menu-footer-links')
+   *
+   *  Default parent item
+   *    menu_parent_{$type}
+   *    value <string>
+   *      {menu-id}:{item-id}
+   *      Example: 'main-menu:0'
+   */
+  if (module_exists('menu')) {
+    if (isset($node_info['menu'])) {
+      // set data
+      if (isset($node_info['menu']['options'])) {
+        variable_set("menu_options_{$node_info['type']}", $node_info['menu']['options']);
+      }
+      if (isset($node_info['menu']['parent'])) {
+        variable_set("menu_parent_{$node_info['type']}", $node_info['menu']['parent']);
+      }
+    }
+  }
+}
