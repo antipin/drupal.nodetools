@@ -9,8 +9,7 @@ Extends hook_node_info with extra properties, such as submit, display, publishin
 
 Installation
 ============
-* Copy the 'googleanalytics' module directory in to your Drupal
-sites/all/modules directory as usual.
+* Copy the 'nodetools' module directory in to your Drupal sites/all/modules directory as usual.
 
 
 Usage
