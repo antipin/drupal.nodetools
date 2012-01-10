@@ -78,11 +78,12 @@ function hook_node_info() {
         'default-mode' => 1,
 
         /**
-         *  Allow anonimous to leave commentns
+         *  Anonymous commenting settings
          * 	  comment_anonymous_{$type}
-         *    values <int>:
-         *      0 => forbid
-         *      1 => allow
+         *    value <int>:
+         *      0 => Anonymous posters may not enter contact information
+         *      1 => Anonymous posters may leave contact information
+         *      2 => Anonymous posters must leave contact information
          */
         'anonymous' => 1,
 

@@ -141,11 +141,12 @@ function nodetools_set_node_comment_settings($node_info) {
    *      0 => don't show
    *      1 => show
    *
-   *  Allow anonimous to leave commentns
+   *  Anonymous commenting settings
    * 	  comment_anonymous_{$type}
    *    values:
-   *      0 => forbid
-   *      1 => allow
+   *      0 => Anonymous posters may not enter contact information
+   *      1 => Anonymous posters may leave contact information
+   *      2 => Anonymous posters must leave contact information
    *
    *  Comments per page
    *    comment_default_per_page_{$type}
