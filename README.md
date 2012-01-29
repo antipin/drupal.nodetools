@@ -1,13 +1,11 @@
 # drupal.nodetools project
 
 ## Authorship
-
-Module: Node tools
-Author: Alex Antipin <http://labs42.com>
+Alex Antipin <http://labs42.com>
 
 
 ## Description
-Extends hook_node_info with extra properties, such as submit, display, publishing, comment settings etc
+Node tools is a Drupal 7 module that extends hook_node_info with extra properties, such as submit, display, publishing, comment settings etc.
 
 
 ## Installation
@@ -20,4 +18,4 @@ See nodetools.api.php
 ## Changelog
 
 ### Version 1.0
-* First release
+First release
